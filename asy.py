@@ -11,6 +11,23 @@ atcoderR={}
 atcoderB={}
 atcoderT={}
 res={}
+#URLpageLink
+async def urlpage(url,S):
+    response = await aiohttp.request('GET', url)
+    body = await response.text()
+    soup = BeautifulSoup(body,'lxml')
+    if (soup.find("div",class_="pagination pagination-centered")):
+        divlink=soup.find("div",class_="pagination pagination-centered")
+        spliturl=url.split("?")
+        for i in divlink.findAll("a"):
+            if(i.get_text().isdigit()):
+                page=int(i.get_text())
+        for i in range(1,page+1):
+            addURL.append(spliturl[0]+"/"+str(1)+"?"+spliturl[1])
+    else:
+        notsubURL.append(url)
+
+
 #URLスクレイピング(非同期)
 async def kaiseki(url,S):
     response = await aiohttp.request('GET', url)
@@ -43,6 +60,7 @@ async def kaiseki(url,S):
         atcoderR.update({i:resalt1})
     elif(S=="g"):
         atcoderG.update({i:resalt1})
+        
 #URL設定
 def start(username):
     dbname='database.db'
