@@ -29,7 +29,20 @@ async def urlpage(url,S):
     else:
         notsubURLlist.append(url)
 
-
+async def notsub(url,S):
+    i=url[10:13]
+    if(S=="b"):
+        level = {"A": "No", "B": "No", "C": "No", "D": "No"}
+        atcoderB.update({i:level})
+    elif(S=="t"):
+        level = {"A": "No", "B": "No", "C": "No"}
+        atcoderT.update({i:level})
+    elif(S=="r"):
+        level = {"C": "No", "D": "No", "E": "No", "F": "No"}
+        atcoderR.update({i:level})
+    elif(S=="g"):
+        level = {"A": "No", "B": "No", "C": "No", "D": "No","E":"No","F":"No"}
+        atcoderG.update({i:level})
 #URLスクレイピング(非同期)
 async def kaiseki(url,S):
     response = await aiohttp.request('GET', url)
@@ -37,7 +50,6 @@ async def kaiseki(url,S):
     soup = BeautifulSoup(body,'lxml')
 
     i=url[10:13]
-    resalt1=[]
     if(S=="b"):
         if(i in atcoderB):
             level=atcoderB.values(i)
@@ -91,10 +103,14 @@ def start(username):
             url = "http://a"+S+"c"+str(i).zfill(3)+".contest.atcoder.jp/submissions/all?user_screen_name="+username
             rss.append(url)
     loop.run_until_complete(asyncio.wait([urlpage(url,S) for url in rss]))
-
+    loop.run_until_complete(asyncio.wait([notsub(url,url[8]) for url in notsubURLlist]))
     loop.run_until_complete(asyncio.wait([kaiseki(url,url[8]) for url in addURL]))
     loop.close()
     conn.close()
+    print(atcoderB)
+    for k, v in sorted(atcoderB.items()):
+        for problem ,result in sorted(v.items()):
+            print(k,problem, result)
     return atcoderB,atcoderG,atcoderR,atcoderT
 if __name__ == '__main__':
     B,G,R,T=start('masahito')

@@ -42,12 +42,10 @@
            %for k, v in sorted(scoreG.items()):
            <tr>
              <td>{{k}}</td>
-             <td>{{v[0]}}</td>
-             <td>{{v[1]}}</td>
-             <td>{{v[2]}}</td>
-             <td>{{v[3]}}</td>
-             <td>{{v[4]}}</td>
-             <td>{{v[5]}}</td>
+             %for problem ,result in sorted(v.items()):
+                 <!--print(k,problem, result)-->
+             <td>{{result}}</td>
+             % end
            </tr>
            % end
          </tbody>
@@ -68,10 +66,9 @@
            %for k, v in sorted(scoreR.items()):
            <tr>
              <td>{{k}}</td>
-             <td>{{v[0]}}</td>
-             <td>{{v[1]}}</td>
-             <td>{{v[2]}}</td>
-             <td>{{v[3]}}</td>
+             %for problem ,result in sorted(v.items()):
+             <td>{{result}}</td>
+             % end
            </tr>
            % end
          </tbody>
@@ -92,12 +89,11 @@
            %for k, v in sorted(scoreB.items()):
            <tr>
              <td>{{k}}</td>
-             <td>{{v[0]}}</td>
-             <td>{{v[1]}}</td>
-             <td>{{v[2]}}</td>
-             <td>{{v[3]}}</td>
+             %for problem ,result in sorted(v.items()):
+               <td>{{result}}</td>
+              % end
            </tr>
-           % end
+          % end
          </tbody>
        </table>
      </div>
@@ -115,9 +111,9 @@
            %for k, v in sorted(scoreT.items()):
            <tr>
              <td>{{k}}</td>
-             <td>{{v[0]}}</td>
-             <td>{{v[1]}}</td>
-             <td>{{v[2]}}</td>
+             %for problem ,result in sorted(v.items()):
+             <td>{{result}}</td>
+             % end
            </tr>
            % end
          </tbody>
