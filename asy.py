@@ -11,6 +11,8 @@ atcoderR={}
 atcoderB={}
 atcoderT={}
 res={}
+addURL=[]
+notsubURLlist=[]
 #URLpageLink
 async def urlpage(url,S):
     response = await aiohttp.request('GET', url)
@@ -25,7 +27,7 @@ async def urlpage(url,S):
         for i in range(1,page+1):
             addURL.append(spliturl[0]+"/"+str(1)+"?"+spliturl[1])
     else:
-        notsubURL.append(url)
+        notsubURLlist.append(url)
 
 
 #URLスクレイピング(非同期)
@@ -33,34 +35,46 @@ async def kaiseki(url,S):
     response = await aiohttp.request('GET', url)
     body = await response.text()
     soup = BeautifulSoup(body,'lxml')
-    print(url,S,int(url[10:13]))
+
     i=url[10:13]
     resalt1=[]
     if(S=="b"):
-        level = {"A": "No", "B": "No", "C": "No", "D": "No"}
+        if(i in atcoderB):
+            level=atcoderB.values(i)
+        else:
+            level = {"A": "No", "B": "No", "C": "No", "D": "No"}
     elif(S=="t"):
-        level = {"A": "No", "B": "No", "C": "No"}
+        if(i in atcoderT):
+            level=atcoderT.values(i)
+        else:
+            level = {"A": "No", "B": "No", "C": "No"}
     elif(S=="r"):
-        level = {"C": "No", "D": "No", "E": "No", "F": "No"}
+        if(i in atcoderR):
+            level=atcoderR.values(i)
+        else:
+            level = {"C": "No", "D": "No", "E": "No", "F": "No"}
     elif(S=="g"):
-        level = {"A": "No", "B": "No", "C": "No", "D": "No","E":"No","F":"No"}
+        if(i in atcoderG):
+            level=atcoderG.values(i)
+        else:
+            level = {"A": "No", "B": "No", "C": "No", "D": "No","E":"No","F":"No"}
     for tbody in soup.findAll("tbody"):
         for td in tbody.findAll("tr"):
             tr=td.findAll("td")
             if(level[tr[1].text[0]]!="AC"):
                 level[tr[1].text[0]]=tr[6].text
 
-    for k, v in sorted(level.items()):
-        resalt1.append(v)
+#    for k, v in sorted(level.items()):
+#        resalt1.append(v)
     if(S=="b"):
-        atcoderB.update({i:resalt1})
+        atcoderB.update({i:level})
     elif(S=="t"):
-        atcoderT.update({i:resalt1})
+        atcoderT.update({i:level})
     elif(S=="r"):
-        atcoderR.update({i:resalt1})
+        atcoderR.update({i:level})
     elif(S=="g"):
-        atcoderG.update({i:resalt1})
-        
+        atcoderG.update({i:level})
+
 #URL設定
 def start(username):
     dbname='database.db'
@@ -68,14 +82,17 @@ def start(username):
     c=conn.cursor()
     select_sql='select * from contest'
     loop = asyncio.get_event_loop()
+    rss=[]
     for row in c.execute(select_sql):
         S=row[0][0].lower()
         number=row[1]
-        rss=[]
+
         for i in range(1,number+1):
             url = "http://a"+S+"c"+str(i).zfill(3)+".contest.atcoder.jp/submissions/all?user_screen_name="+username
             rss.append(url)
-        loop.run_until_complete(asyncio.wait([kaiseki(url,S) for url in rss]))
+    loop.run_until_complete(asyncio.wait([urlpage(url,S) for url in rss]))
+
+    loop.run_until_complete(asyncio.wait([kaiseki(url,url[8]) for url in addURL]))
     loop.close()
     conn.close()
     return atcoderB,atcoderG,atcoderR,atcoderT
