@@ -107,10 +107,6 @@ def start(username):
     loop.run_until_complete(asyncio.wait([kaiseki(url,url[8]) for url in addURL]))
     loop.close()
     conn.close()
-    print(atcoderB)
-    for k, v in sorted(atcoderB.items()):
-        for problem ,result in sorted(v.items()):
-            print(k,problem, result)
     return atcoderB,atcoderG,atcoderR,atcoderT
 if __name__ == '__main__':
     B,G,R,T=start('masahito')

@@ -35,4 +35,4 @@ def do_echo():
     scoreB,scoreG,scoreR,scoreT=asy.start(input_txt)
     return template('table',scoreB=scoreB,scoreG=scoreG,scoreR=scoreR,scoreT=scoreT,input_txt=input_txt)
 
-run(host="localhost", port=int(os.environ.get("PORT", 5000)),debug=True)
+run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)),debug=True)
