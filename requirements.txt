@@ -1,0 +1,13 @@
+aiohttp==1.2.0
+async-timeout==1.1.0
+beautifulsoup4==4.5.1
+bottle==0.12.10
+chardet==2.3.0
+click==6.6
+feedparser==5.2.1
+lxml==3.6.4
+multidict==2.1.4
+redis==2.10.5
+requests==2.12.3
+rq==0.7.0
+yarl==0.8.1
